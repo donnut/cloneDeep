@@ -39,6 +39,11 @@ describe('clone objects', function() {
         var z = {b: y};
         x.c = z;
         var clone = cloneDeep(x);
+        assert.ok(x !== clone);
+        assert.ok(x.c !== clone.c);
+        assert.ok(x.c.b !== clone.c.b);
+        assert.ok(x.c.b.a !== clone.c.b.a);
+        assert.ok(x.c.b.a.c !== clone.c.b.a.c);
         assert.deepEqual(R.keys(x), R.keys(clone));
         assert.deepEqual(R.keys(x.c), R.keys(clone.c));
         assert.deepEqual(R.keys(x.c.b), R.keys(clone.c.b));
@@ -79,10 +84,16 @@ describe('clone Dates', function() {
 
 describe('clone deep nested mixed objects', function() {
     it('should clone array with objects', function() {
-        var arr = [{a: {b: 1}}, [{a: {b: 1}}]];
+        var arr = [{a: {b: 1}}, [{c: {d: 1}}]];
         var clone = cloneDeep(arr);
         arr[1][0] = null;
-        assert.deepEqual([{a: {b: 1}}, [{a: {b: 1}}]], clone);
+        assert.deepEqual([{a: {b: 1}}, [{c: {d: 1}}]], clone);
+    });
+    it('should clone array with arrays', function() {
+        var arr = [[1], [[3]]];
+        var clone = cloneDeep(arr);
+        arr[1][0] = null;
+        assert.deepEqual([[1], [[3]]], clone);
     });
 });
 

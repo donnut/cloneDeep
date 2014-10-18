@@ -60,11 +60,10 @@
     var copyArray = function(arr) {
         var newArr = [];
         for (var i = 0, len = arr.length; i < len; i++) {
-            if (toString.call(arr[i]) === '[object Object]') {
-                console.log('object!!',toString.call(copyObj(arr[i])));
-                newArr = newArr.concat(copyObj(arr[i]));
+            if (R.is(Object, arr[i])) {
+                newArr.push(cloneDeep(arr[i]));
             } else {
-                newArr = newArr.concat(arr.slice(i, i+1));
+                newArr.push(arr[i]);
             }
         }
         return newArr;
