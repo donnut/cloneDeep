@@ -2,7 +2,7 @@ var assert = require('assert');
 var R = require('../ramda');
 var cloneDeep = require('..');
 
-describe('clone numbers and string', function() {
+describe('clone numbers, strings and booleans', function() {
     it('should clone integers', function() {
         assert.equal(-4, cloneDeep(-4));
         assert.equal(9007199254740991, cloneDeep(9007199254740991));
@@ -15,6 +15,10 @@ describe('clone numbers and string', function() {
 
     it('should clone strings', function() {
         assert.equal('ramda', cloneDeep('ramda'));
+    });
+
+    it('should clone booleans', function() {
+        assert.equal(true, cloneDeep(true));
     });
 });
 
