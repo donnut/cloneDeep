@@ -66,16 +66,35 @@ describe('clone arrays', function() {
     it('should clone deep arrays', function() {
         var arr = [1, [1, 2, 3], [[[5]]]];
         var clone = cloneDeep(arr);
-        arr[2] = 4;
+
+        assert.ok(arr !== clone);
+        assert.ok(arr[2] !== clone[2]);
+        assert.ok(arr[2][0] !== clone[2][0]);
+
         assert.deepEqual([1, [1, 2, 3], [[[5]]]], clone);
+    });
+});
+
+describe('`clone` functions', function() {
+    it('should keep reference to function', function() {
+        var func = function(x) { return x+x;};
+        var arr = [{a: func}];
+
+        var clone = cloneDeep(arr);
+
+        assert.equal(clone[0].a(10), 20);
+        assert.ok(arr[0].a === clone[0].a);
+
     });
 });
 
 describe('clone Dates', function() {
     it('should clone date', function() {
         var date = new Date(2014, 10, 14, 23, 59, 59, 999);
+
         var clone = cloneDeep(date);
-        date = null;
+
+        assert.ok(date !== clone);
         assert.deepEqual(new Date(2014, 10, 14, 23, 59, 59, 999), clone);
 
         assert.equal(5, clone.getDay()); // friday
@@ -95,6 +114,23 @@ describe('clone deep nested mixed objects', function() {
         arr[1][0] = null;
         assert.deepEqual([[1], [[3]]], clone);
     });
+    it('should clone array with mutual ref object', function() {
+        var obj = {a: 1};
+        var arr = [{b: obj}, {b: obj}];
+        var clone = cloneDeep(arr);
+
+        assert.ok(arr[0].b === arr[1].b);
+        assert.ok(clone[0].b === clone[1].b);
+        assert.ok(clone[0].b !== arr[0].b);
+        assert.ok(clone[1].b !== arr[1].b);
+
+        assert.deepEqual(clone[0].b, {a:1});
+        assert.deepEqual(clone[1].b, {a:1});
+
+        obj.a = 2;
+        assert.deepEqual(clone[0].b, {a:1});
+        assert.deepEqual(clone[1].b, {a:1});
+    });
 });
 
 describe('clone edge cases', function() {
@@ -103,14 +139,11 @@ describe('clone edge cases', function() {
         assert.ok(undefined === cloneDeep(undefined));
         assert.ok(undefined === cloneDeep());
         assert.ok(null !== cloneDeep(undefined));
-        assert.ok({} !== cloneDeep({}));
-        assert.ok([] !== cloneDeep([]));
 
         var obj = {};
         assert.ok(obj !== cloneDeep(obj));
 
         var arr = [];
         assert.ok(arr !== cloneDeep(arr));
-
     });
 });
