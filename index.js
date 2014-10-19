@@ -50,7 +50,7 @@
         } else {
             if (toString.call(value) === '[object Object]') {
                 copiedValue = {};
-            } else if (toString.call(value) === '[object Array]') {
+            } else {
                 copiedValue = [];
             }
             refFrom.push(value);
