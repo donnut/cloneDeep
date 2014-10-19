@@ -57,6 +57,31 @@ describe('clone objects', function() {
         x.c.b = 1;
         assert.notDeepEqual(R.keys(x.c.b), R.keys(clone.c.b));
     });
+
+    it('should clone instances', function() {
+        var Obj = function(x) {
+            this.x = x;
+        };
+        Obj.prototype.get = function() {
+            return this.x;
+        };
+        Obj.prototype.set = function(x) {
+            this.x = x;
+        };
+
+        var obj = new Obj(10);
+        assert.equal(obj.get(), 10);
+
+        var clone = cloneDeep(obj);
+        assert.equal(clone.get(), 10);
+
+        assert.ok(obj !== clone);
+
+        obj.set(11);
+        assert.equal(obj.get(), 11);
+        assert.equal(clone.get(), 10);
+
+    });
 });
 
 describe('clone arrays', function() {
