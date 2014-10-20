@@ -24,10 +24,11 @@ describe('clone numbers, strings and booleans', function() {
 
 describe('clone objects', function() {
     it('should clone shallow object', function() {
-        var obj = {a: 1, b: 'ramda', c: true, d: new Date('2013')};
+        var obj = {a: 1, b: 'ramda', c: true, d: new Date(2013, 11, 25)};
         var clone = cloneDeep(obj);
         obj.c = false;
-        assert.deepEqual({a: 1, b: 'ramda', c: true, d: new Date('2013')}, clone);
+        obj.d.setDate(31);
+        assert.deepEqual({a: 1, b: 'ramda', c: true, d: new Date(2013, 11, 25)}, clone);
     });
 
     it('should clone deep object', function() {
@@ -80,7 +81,6 @@ describe('clone objects', function() {
         obj.set(11);
         assert.equal(obj.get(), 11);
         assert.equal(clone.get(), 10);
-
     });
 });
 
@@ -175,4 +175,5 @@ describe('clone edge cases', function() {
         var arr = [];
         assert.ok(arr !== cloneDeep(arr));
     });
+
 });
